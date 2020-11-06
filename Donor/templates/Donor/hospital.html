@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>Registration</title>
+    <style>
+    form{
+        margin-left: 200px;
+        margin-right: 200px;
+    }
+    </style>
+</head>
+<body style=" text-align: center">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        
+      </div>
+    </div>
+  </nav>
+  
+    <div class="alert alert-primary" role="alert">
+        <h1 style="text-align: center;">Registration Form For Hospitals  </h1>     
+    </div>
+    <form action={% url 'hospital'  %}  method="POST" style="display: inline-block;">
+        {% csrf_token %}
+        <div class="form-group">
+            <select class="form-control" name="bloodtype" id="bloodtype" style="width:500px;"  title="Enter Your Blood Type" required>
+              <option value="" selected disabled hidden>Blood Type</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+              <option value="P+">P+</option>
+              <option value="P-">P-</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+            </select>
+          </div>  
+        <div class="form-group">
+            <select name="city" class="form-control" id="city"  title="Enter Your city" required>
+              <option value="" selected disabled hidden>Choose Your city</option>
+              <option value="Cairo">Cairo</option>
+              <option value="mansoura">mansoura</option>
+              <option value="Alexandria">Alexandria</option>
+              <option value="AlMahallah">AlMahallah</option>
+              <option value="Aswan">Aswan</option>
+              <option value="Luxor">Luxor</option>
+            </select>
+        </div>
+          <div class="form-group">
+            <select class="form-control" name="patientsStatus" id="patientsStatus" title="Enter Your Patients' Status" required>
+              <option value="" selected disabled hidden>Patients' Status</option>
+              <option value="Immediate">Immediate</option>
+              <option value="Urgent">Urgent</option>
+              <option value="Normal">Normal</option>
+            </select>
+            
+          </div>  
+          <div class="form-group">
+            <input type="number" placeholder="Blood Quantity" class="form-control" min='1'  name="bloodQuantity" title="Enter Your Blood Quantity" required >
+        </div>
+      <br><br><br>
+        <button type="submit" style="padding: 10px 145px;border-radius: 12px;" class="btn btn-primary">Register</button>
+      </form>   
+      {% if context != "" %}
+        <div class="alert alert-success">
+          <h3> {{context|linebreaks }} </h3>
+        </div>
+      {% endif %}
+      <!-- {{form}} -->
+</body>
+</html>

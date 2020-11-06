@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+		integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog=="
+		crossorigin="anonymous" />
+
+	<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<!------ Include the above in your HEAD tag ---------->
+
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.8/css/all.css">
+
+</head>
+
+<body style=" text-align: center">
+	<div class="container" style="padding:250px">
+		<div class="card bg-light">
+			<article class="card-body mx-auto" style="max-width: 500px;">
+				<h4 class="card-title mt-3 text-center">Create Account</h4>
+
+				<form action={% url 'signup'  %} method="POST" style="display: inline-block;width:450px;">
+					{% csrf_token %}
+
+					<div class="form-group input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"> <i class="fa fa-user"></i> </span>
+						</div>
+						<input name="name" class="form-control" placeholder="Full name" type="text" required>
+					</div> <!-- form-group// -->
+					<div class="form-group input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"> <i class="fa fa-envelope"></i> </span>
+						</div>
+						<input name="email" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="Email address" type="email" required>
+					</div> <!-- form-group// -->
+					<div class="form-group input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"> <i class="fas fa-city" style="font-size: 13px"></i> </span>
+						</div>
+						<select name="city" class="form-control" id="city" placeholder="city" title="Enter Your city"
+							required>
+							<option value="" selected disabled hidden>city</option>
+							<option value="Cairo">Cairo</option>
+							<option value="mansoura">mansoura</option>
+							<option value="Alexandria">Alexandria</option>
+							<option value="AlMahallah">AlMahallah</option>
+							<option value="Aswan">Aswan</option>
+							<option value="Luxor">Luxor</option>
+						</select>
+					</div>
+
+					<div class="form-group input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+						</div>
+						<input class="form-control" placeholder="Create password" id="password" type="password"
+							name="password" required>
+					</div> <!-- form-group// -->
+					<div class="form-group input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text"> <i class="fa fa-lock"></i> </span>
+						</div>
+						<input class="form-control" placeholder="Repeat password" id="confirm_password" type="password"
+							name="confirm_password" required>
+					</div> <!-- form-group// -->
+					<div class="form-group">
+						<button type="submit" class="btn btn-primary btn-block"> Create Account </button>
+					</div> <!-- form-group// -->
+					<div class="mt-4">
+						<div class="d-flex justify-content-center links">
+							Already have an account? <a href="{% url 'login' %}" class="ml-2">Login</a>
+						</div>
+					</div>
+				</form>
+			</article>
+		</div> <!-- card.// -->
+
+	</div>
+	<!--container end.//-->
+
+</body>
+<script>
+	var password = document.getElementById("password")
+		, confirm_password = document.getElementById("confirm_password");
+
+	function validatePassword() {
+		if (password.value != confirm_password.value) {
+			confirm_password.setCustomValidity("Passwords Don't Match");
+		} else {
+			confirm_password.setCustomValidity('');
+		}
+	}
+
+	password.onchange = validatePassword;
+	confirm_password.onkeyup = validatePassword;
+</script>
+
+</html>
