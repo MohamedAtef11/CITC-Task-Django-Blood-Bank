@@ -13,13 +13,17 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from Donor.models import Donor 
 
 def index(request): 
-    
-    user = User.objects.get(id=request.session['logged_in_user'])
-    id_user = user.id
-    donor_data = Donor.objects.filter(id_user=id_user)
-    header = ['Name', 'City','Blood Type' , 'Donate at' ,'Expired at', 'available']
-    len_data=(len(donor_data))
-    return render(request, 'user/index.html',{'username':user , 'header':header ,'donor_data':donor_data , 'len_data':len_data }) 
+    context={}
+    try:
+        user = User.objects.get(id=request.session['logged_in_user'])
+        id_user = user.id
+        donor_data = Donor.objects.filter(id_user=id_user)
+        header = ['Name', 'City','Blood Type' , 'Donate at' ,'Expired at', 'available']
+        len_data=(len(donor_data))
+        context = {'username':user , 'header':header ,'donor_data':donor_data , 'len_data':len_data }
+    except:
+        pass
+    return render(request, 'user/index.html',context) 
    
 def register(request): 
     if request.method == 'POST': 

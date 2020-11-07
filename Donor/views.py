@@ -12,6 +12,9 @@ from .forms import DonorForm ,HospitalForm
 from .models import Donor , Hospital
 from datetime import datetime
 from .mail import send_email 
+import  numpy as np
+import geneticalgorithm as GA
+import random
 
 # Create your views here.
 
@@ -84,8 +87,9 @@ def hospital(request):
             print(datetime.now().date())
             # context=whoCanDonate(city,bloodtype)
             # context=donorsDataHaveSameBloodType(bloodtype)
-            donation=donorsDataHaveSameBloodType(bloodtype)
-            evaluation(donation,citiess['Cairo'])
+            allDonations=donorsDataHaveSameBloodType(bloodtype)
+            eval_min(city,allDonations)
+            # evaluation(donation,citiess['Cairo'])
 
         else:
             print(request.POST)
@@ -130,7 +134,27 @@ def evaluation (donations,mainCity):
     for i in donations:
         cityy = i.city
         dis = distance(mainCity,citiess[cityy])
-        print(dis)
         sum += dis
-    print(sum)
+    return (sum)
     
+def eval_min(maincity,allDonations):
+    def f(X):
+        xx = function_tanya (X,allDonations)
+        yy = evaluation(xx,maincity)
+        return yy
+    varbound=np.array([[0,len(allDonations)-1]]*10)
+
+    model=GA(function=f,dimension=10,variable_type='int',variable_boundaries=varbound)
+    model.run()
+    convergence=model.report
+    solution=model.ouput_dict
+    print (convergence)
+    print (solution)
+    return solution
+
+def function_tanya (arr,allDonations):
+    new_arr=[]
+    for i in arr :
+        new_arr.append(allDonations[i])
+    
+    return new_arr
