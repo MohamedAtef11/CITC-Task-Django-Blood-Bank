@@ -3,6 +3,8 @@ from django.core.validators import MinLengthValidator
 from django.core.validators import MaxLengthValidator
 from datetime import datetime  
 from datetime import timedelta  
+from django.contrib.auth.models import User 
+
 # Create your models here.
 
 
@@ -16,6 +18,8 @@ class Donor(models.Model):
     BloodExpirationDate =  models.DateField(default=(datetime.now() + timedelta(days=42)))  
     created_at = models.DateTimeField(auto_now_add=True)
     available = models.BooleanField(default=True , null=False)
+    id_user = models.ForeignKey(User, on_delete=models.CASCADE , default=1)
+
     # def __str__(self):
     #     return self.name
 

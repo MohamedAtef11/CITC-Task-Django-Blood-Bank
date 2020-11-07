@@ -23,7 +23,8 @@
   </nav>
   
     <div class="alert alert-primary" role="alert">
-        <h1 style="text-align: center;">Registration Form For Hospitals  </h1>     
+        <h1 style="text-align: center;">Registration Form For Hospitals  </h1>  
+        <a href="{% url "index" %}" class="btn btn-info" role="button"> Home</a>   
     </div>
     <form action={% url 'hospital'  %}  method="POST" style="display: inline-block;">
         {% csrf_token %}

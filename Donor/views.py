@@ -24,9 +24,8 @@ from .mail import send_email
 citiess = {'Cairo': (30.06263, 31.24967), 'mansoura': (31.03637, 31.38069) ,
             'Alexandria':(31.20176, 29.91582) ,'AlMahallah' : (30.97063, 31.1669),
             'Aswan' : (24.09082, 32.89942),'Luxor' :(25.69893, 32.6421)} 
-@cache_control(no_cache=True, must_revalidate=True, no_store=True)
-@login_required
-def register(request):
+@login_required(login_url='/login/')
+def donate(request):
     print (distance(citiess["Cairo"],citiess["mansoura"]))
     if request.method == 'POST':
         nationalID = request.POST['nationalID']
@@ -46,12 +45,20 @@ def register(request):
         else:
             print(virustest)
             print(email)
-            send_email(email,
-                            'Blood Bank',
-                            'Sorry, you can not donate')
-    
+            if not canDonate(nationalID) and virustest=="Positive" :
+                send_email(email,
+                                'Blood Bank',
+                                'Sorry, you can not donate because your virustest is "Positive" and you must donate after three months from your last donation')
+            elif virustest=="Positive" :
+                send_email(email,
+                                'Blood Bank',
+                                'Sorry, you can not donate because your virustest is "Positive"')
+            else:
+                send_email(email,
+                                'Blood Bank',
+                                'Sorry, you can not donate because you must donate after three months from your last donation ')
     form = DonorForm()
-    return render(request, "Donor/register.html", {'form': form})
+    return render(request, "Donor/donate.html", {'form': form})
 
 
 def canDonate(nationalid):

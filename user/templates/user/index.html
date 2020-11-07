@@ -1,0 +1,148 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>{{title}}</title>
+
+
+    <!-- bootstrap file -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- bootstrap file-->
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <!-- main css -->
+    <link rel="stylesheet" type="text/css" href="{% static "index.css" %}" />
+</head>
+
+<body class="container-fluid" style=" text-align: center">
+
+
+    <header class="row">
+
+        <!-- navbar-->
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button class="navbar-toggle" data-toggle="collapse" data-target="#mainNavBar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="mainNavBar">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="{% url "index" %}">Home</a></li>
+
+                        {% if user.is_authenticated %}
+                        <li><a href="{% url "logout" %}"><span class="glyphicon glyphicon-log-out"></span> &nbsp;
+                                Logout</a></li>
+                        {% else %}
+                        <li><a href="{% url "register" %}"><span class="glyphicon glyphicon-user"></span> &nbsp; Sign
+                                up</a></li>
+                        <li><a href="{% url "login" %}"><span class="glyphicon glyphicon-log-in"></span> &nbsp; Log
+                                in</a></li>
+                        {% endif %}
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <br />
+    <br>
+    <br>
+    <div class="row">
+        {% block start %}
+        {% if user.is_authenticated %}
+        <center>
+            <h1>welcome, {{username}}</h1>
+        </center>
+        <!-- <button type="button" class="btn btn-primary"><a href="{% url "donate" %}">donate</a></button>
+    <button type="button" class="btn btn-primary"><a href="{% url "hospital" %}">request</a></button> -->
+        <div class="form-group">
+            <a href="{% url "donate" %}" class="btn btn-info" role="button"> Donate</a>
+            <a href="{% url "hospital" %}" class="btn btn-info" role="button"> Request Blood</a>
+        </div>
+        <div class="form-group" style=" text-align: center">
+            {% if len_data != 0 %}
+            <table class="table" id='donors'>
+                <thead>
+                    <tr>
+                        {% for k in header %}
+                        <th>{{k}}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for k in donor_data %}
+                    <tr>
+                        <td>{{k.name}}</td>
+                        <td>{{k.city}}</td>
+                        <td>{{k.bloodtype}}</td>
+                        <td>{{k.created_at}}</td>
+                        <td>{{k.BloodExpirationDate}}</td>
+                        <td>{{k.available}}</td>
+                    </tr>
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+            {% endif  %}
+        </div>
+
+        {% else %}
+        <center>
+            <h1>log in, please . . .</h1>
+        </center>
+        {% endif %}
+        {% endblock %}
+    </div>
+</body>
+<style>
+    #donors {
+        font-family: Arial, Helvetica, sans-serif;
+        border-collapse: collapse;
+        width: 95%;
+        margin: auto;
+    }
+
+    #donors td,
+    #donors th {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    #donors tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    #donors tr:hover {
+        background-color: #ddd;
+    }
+
+    #donors th {
+        padding-top: 12px;
+        padding-bottom: 12px;
+        text-align: center;
+        background-color: #4CAF50;
+        color: white;
+    }
+</style>
+
+</html>
