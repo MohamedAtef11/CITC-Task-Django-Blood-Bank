@@ -1,5 +1,6 @@
-{% load static %}
 {% load crispy_forms_tags %}
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -25,7 +26,7 @@
 
 
     <!-- main css -->
-    <link rel="stylesheet" type="text/css" href="{% static "index.css" %}" />
+    
 </head>
 
 <body class="container-fluid" style=" text-align: center">
@@ -108,7 +109,10 @@
 
         {% else %}
         <center>
-            <h1>log in, please . . .</h1>
+            <img src="{% static 'images/Bloodbankhome.gif'%}" alt="">
+            <h1> Log IN </h1>
+            <h1> Or </h1>
+            <h1> Sign up </h1>
         </center>
         {% endif %}
         {% endblock %}

@@ -13,17 +13,10 @@ from .models import Donor , Hospital
 from datetime import datetime
 from .mail import send_email 
 import  numpy as np
-import geneticalgorithm as GA
-import random
+from geneticalgorithm import geneticalgorithm as ga
 
 # Create your views here.
 
-# Cairo = (30.06263, 31.24967)
-# Mansoura = (31.03637, 31.38069)
-# Alexandria = (31.20176, 29.91582)
-# AlMahallah = (30.97063, 31.1669)
-# Aswan = (24.09082, 32.89942)
-# Luxor = (25.69893, 32.6421)
 citiess = {'Cairo': (30.06263, 31.24967), 'mansoura': (31.03637, 31.38069) ,
             'Alexandria':(31.20176, 29.91582) ,'AlMahallah' : (30.97063, 31.1669),
             'Aswan' : (24.09082, 32.89942),'Luxor' :(25.69893, 32.6421)} 
@@ -37,6 +30,7 @@ def donate(request):
         if canDonate(nationalID) and virustest=="Negative" :
             form = DonorForm(request.POST)
             if form.is_valid():
+                form.instance.id_user_id=request.session['logged_in_user']
                 form.save()
                 send_email(email,
                             'Blood Bank',
@@ -77,40 +71,44 @@ def canDonate(nationalid):
 
 
 def hospital(request):
+    header = ['Name', 'City','Blood Type' , 'Donate at' ,'Expired at', 'available']
     context=""
+    error=""
+    len_data=0
+    len_error=0
+    arr_donors=[]
     if request.method == 'POST':
         city = request.POST['city']
         bloodtype = request.POST['bloodtype']
+        patientsStatus = request.POST['patientsStatus']
         form = HospitalForm(request.POST)
         if form.is_valid():
             form.save()
-            print(datetime.now().date())
-            # context=whoCanDonate(city,bloodtype)
-            # context=donorsDataHaveSameBloodType(bloodtype)
             allDonations=donorsDataHaveSameBloodType(bloodtype)
-            eval_min(city,allDonations)
-            # evaluation(donation,citiess['Cairo'])
+            iteration=1
+            if patientsStatus == "Normal":
+                iteration=2
+            elif patientsStatus == "Immediate":
+                iteration=5
+            else:
+                iteration=30
+            if allDonations == "No one has this Blood type":
+                error="No one have this blood type"
+                len_error=len(error)
+            else:
+                donors_ga = eval_min(citiess[city],allDonations,iteration)
+                for i in set(donors_ga['variable']):
+                    arr_donors.append(allDonations[int(i)])
+                len_data=(len(arr_donors))
+            
 
         else:
             print(request.POST)
             print(form.errors)
     
     form = HospitalForm()
-    return render(request, "Donor/hospital.html", {'form': form,'context':context})
+    return render(request, "Donor/hospital.html", {'form': form,'arr_donors':arr_donors , 'header':header,'len_data':len_data,'len_error':len_error})
 
-
-def whoCanDonate(city,bloodtype):
-    if not Donor.objects.filter(city=city,bloodtype=bloodtype).exists():
-        return ("No one at this city")
-    else :
-        donor = Donor.objects.filter(city=city,bloodtype=bloodtype)
-        names = [c.name for c in Donor.objects.filter(city=city,bloodtype=bloodtype)]
-        mails = [c.email for c in Donor.objects.filter(city=city,bloodtype=bloodtype)]
-        bloodtypes = [c.bloodtype for c in Donor.objects.filter(city=city,bloodtype=bloodtype)]
-        cities = [c.city for c in Donor.objects.filter(city=city,bloodtype=bloodtype)]
-        res = "\n".join("{} his mail is {} his blood type {} from {}".format(a,b,x, y) for a, b ,x ,y in zip(names, mails , bloodtypes,cities))
-        return res
-        
 
 def distance(city1,city2):
       
@@ -123,10 +121,6 @@ def donorsDataHaveSameBloodType(bloodtype):
         return ("No one has this Blood type")
     else :
         donor = Donor.objects.filter(bloodtype=bloodtype ,available="1" , BloodExpirationDate__gte= today)
-        # names = [c.name for c in Donor.objects.filter(bloodtype=bloodtype ,available="1" , BloodExpirationDate__gte= today)]
-        # bloodtypes = [c.bloodtype for c in Donor.objects.filter(bloodtype=bloodtype ,available="1" , BloodExpirationDate__gte= today)]
-        # cities = [c.city for c in Donor.objects.filter(bloodtype=bloodtype ,available="1" , BloodExpirationDate__gte= today)]
-        # res = "\n".join("{}  his blood type {} from {}".format(a,b,x) for a, b ,x  in zip(names, bloodtypes,cities))
         return (donor)
     
 def evaluation (donations,mainCity):
@@ -137,24 +131,27 @@ def evaluation (donations,mainCity):
         sum += dis
     return (sum)
     
-def eval_min(maincity,allDonations):
+def eval_min(maincity,allDonations,iteration):
     def f(X):
-        xx = function_tanya (X,allDonations)
+        xx = convert_index_to_object (X,allDonations)
         yy = evaluation(xx,maincity)
         return yy
     varbound=np.array([[0,len(allDonations)-1]]*10)
-
-    model=GA(function=f,dimension=10,variable_type='int',variable_boundaries=varbound)
+    algorithm_param = {'max_num_iteration': 10*iteration,\
+                   'population_size':10,\
+                   'mutation_probability':0.1,\
+                   'elit_ratio': 0.01,\
+                   'crossover_probability': 0.5,\
+                   'parents_portion': 0.3,\
+                   'crossover_type':'uniform',\
+                   'max_iteration_without_improv':None}
+    model=ga(function=f,dimension=10,variable_type='int',variable_boundaries=varbound , algorithm_parameters=algorithm_param)
     model.run()
-    convergence=model.report
-    solution=model.ouput_dict
-    print (convergence)
-    print (solution)
-    return solution
-
-def function_tanya (arr,allDonations):
+    return model.output_dict
+  
+def convert_index_to_object (arr,allDonations):
     new_arr=[]
     for i in arr :
+        i = int(i)
         new_arr.append(allDonations[i])
-    
     return new_arr

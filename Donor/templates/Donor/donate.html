@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+{% extends "user/index.html" %}
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,61 +13,69 @@
     }
     </style>
 </head>
-<body style=" text-align: center">
-  <div class="alert alert-primary" role="alert">
-    <h1 style="text-align: center;">Registration Form For Donors</h1> 
-    <a href="{% url "index" %}" class="btn btn-info" role="button"> Home</a>    
-  </div>
-    <form action={% url 'donate'  %}  method="POST" style="display: inline-block;width:500px;">
-        {% csrf_token %}
-        <div class="form-group">
-          
-          <input type="text" class="form-control"  name="nationalID"  placeholder="National ID" pattern="[0-9]{14}" title="National ID must be 14 number" required>
-        </div>
-        <div class="form-group">
-            <input type="text" class="form-control" name="name" placeholder="Name" title="Enter Your Name" required>
-          </div>
-        <div class="form-group">
-          <input type="email" class="form-control" placeholder="Email address" aria-describedby="emailHelp" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"  name="email" title="Enter Your E-mail" required>
-        </div>
-        <div class="form-group">
-            <select name="city" class="form-control" id="city"   placeholder="city" title="Enter Your city" required>
-              <option value="" selected disabled hidden>city</option>
-              <option value="Cairo">Cairo</option>
-              <option value="mansoura">mansoura</option>
-              <option value="Alexandria">Alexandria</option>
-              <option value="AlMahallah">AlMahallah</option>
-              <option value="Aswan">Aswan</option>
-              <option value="Luxor">Luxor</option>
-            </select>
-        </div>
-          <div class="form-group">
-            <select name="virustest" id="virustest"  placeholder="Virus Test" class="form-control" title="Enter Your Virus Test Result" required>
-              <option value="" selected disabled hidden>Virus Test</option>
-              <option value="Positive">Positive</option>
-              <option value="Negative">Negative</option>
-            </select>
-          </div>  
-          <div class="form-group">
-            <select name="bloodtype"  placeholder="Blood Type" class="form-control" id="bloodtype"  title="Enter Your Blood Type" required>
-              <option value="" selected disabled hidden>Blood Type</option>
-              <option value="O+">O+</option>
-              <option value="O-">O-</option>
-              <option value="P+">P+</option>
-              <option value="P-">P-</option>
-              <option value="A+">A+</option>
-              <option value="A-">A-</option>
-              <option value="AB+">AB+</option>
-              <option value="AB-">AB-</option>
-            </select>
-            <br><br>
-          </div>  
-      
-        <button style="padding: 10px 145px;border-radius: 12px;" type="submit" class="btn btn-primary">Register</button>
+<body style=" text-align: center"> -->
+<div class="row">
 
-        
-      </form>   
-      
-      <!-- {{form}} -->
-</body>
-</html>
+  {% block start %}
+
+  <div class="alert alert-primary" role="alert">
+
+    <h1 style="text-align: center;">Registration Form For Donors</h1>
+    <a href="{% url "index" %}" class="btn btn-info" role="button"> Home</a>
+  </div>
+  <form action={% url 'donate'  %} method="POST" style="display: inline-block;width:500px;">
+    {% csrf_token %}
+    <div class="form-group">
+
+      <input type="text" class="form-control" name="nationalID" placeholder="National ID" pattern="[0-9]{14}"
+        title="National ID must be 14 number" required>
+    </div>
+    <div class="form-group">
+      <input type="text" class="form-control" name="name" placeholder="Name" title="Enter Your Name" required>
+    </div>
+    <div class="form-group">
+      <input type="email" class="form-control" placeholder="Email address" aria-describedby="emailHelp"
+        pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" name="email" title="Enter Your E-mail" required>
+    </div>
+    <div class="form-group">
+      <select name="city" class="form-control" id="city" placeholder="city" title="Enter Your city" required>
+        <option value="" selected disabled hidden>city</option>
+        <option value="Cairo">Cairo</option>
+        <option value="mansoura">mansoura</option>
+        <option value="Alexandria">Alexandria</option>
+        <option value="AlMahallah">AlMahallah</option>
+        <option value="Aswan">Aswan</option>
+        <option value="Luxor">Luxor</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <select name="virustest" id="virustest" placeholder="Virus Test" class="form-control"
+        title="Enter Your Virus Test Result" required>
+        <option value="" selected disabled hidden>Virus Test</option>
+        <option value="Positive">Positive</option>
+        <option value="Negative">Negative</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <select name="bloodtype" placeholder="Blood Type" class="form-control" id="bloodtype"
+        title="Enter Your Blood Type" required>
+        <option value="" selected disabled hidden>Blood Type</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+        <option value="P+">P+</option>
+        <option value="P-">P-</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+      </select>
+      <br><br>
+    </div>
+
+    <button style="font-size: 20px;padding: 10px 145px;border-radius: 12px;" type="submit" class="btn btn-primary">Donate</button>
+
+
+  </form>
+
+  {% endblock start %}
+</div>

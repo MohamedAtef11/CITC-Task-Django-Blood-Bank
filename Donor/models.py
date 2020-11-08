@@ -18,7 +18,7 @@ class Donor(models.Model):
     BloodExpirationDate =  models.DateField(default=(datetime.now() + timedelta(days=42)))  
     created_at = models.DateTimeField(auto_now_add=True)
     available = models.BooleanField(default=True , null=False)
-    id_user = models.ForeignKey(User, on_delete=models.CASCADE , default=1)
+    id_user = models.ForeignKey(User, on_delete=models.CASCADE )
 
     # def __str__(self):
     #     return self.name

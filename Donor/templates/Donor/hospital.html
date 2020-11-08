@@ -1,5 +1,7 @@
-<!DOCTYPE html>
+{% extends "user/index.html" %}
+<!-- <!DOCTYPE html>
 <html lang="en">
+  
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,58 +22,136 @@
         
       </div>
     </div>
-  </nav>
-  
-    <div class="alert alert-primary" role="alert">
-        <h1 style="text-align: center;">Registration Form For Hospitals  </h1>  
-        <a href="{% url "index" %}" class="btn btn-info" role="button"> Home</a>   
+  </nav> -->
+<div class="row">
+
+  {% block start %}
+  <div class="alert alert-primary" role="alert">
+    <h1 style="text-align: center;">Registration Form For Hospitals </h1>
+    <a href="{% url "index" %}" class="btn btn-info" role="button"> Home</a>
+  </div>
+  <form action={% url 'hospital'  %} method="POST" style="display: inline-block;">
+    {% csrf_token %}
+    <div class="form-group">
+      <select class="form-control" name="bloodtype" id="bloodtype" style="width:500px;" title="Enter Your Blood Type"
+        required>
+        <option value="" selected disabled hidden>Blood Type</option>
+        <option value="O+">O+</option>
+        <option value="O-">O-</option>
+        <option value="P+">P+</option>
+        <option value="P-">P-</option>
+        <option value="A+">A+</option>
+        <option value="A-">A-</option>
+        <option value="AB+">AB+</option>
+        <option value="AB-">AB-</option>
+      </select>
     </div>
-    <form action={% url 'hospital'  %}  method="POST" style="display: inline-block;">
-        {% csrf_token %}
-        <div class="form-group">
-            <select class="form-control" name="bloodtype" id="bloodtype" style="width:500px;"  title="Enter Your Blood Type" required>
-              <option value="" selected disabled hidden>Blood Type</option>
-              <option value="O+">O+</option>
-              <option value="O-">O-</option>
-              <option value="P+">P+</option>
-              <option value="P-">P-</option>
-              <option value="A+">A+</option>
-              <option value="A-">A-</option>
-              <option value="AB+">AB+</option>
-              <option value="AB-">AB-</option>
-            </select>
-          </div>  
-        <div class="form-group">
-            <select name="city" class="form-control" id="city"  title="Enter Your city" required>
-              <option value="" selected disabled hidden>Choose Your city</option>
-              <option value="Cairo">Cairo</option>
-              <option value="mansoura">mansoura</option>
-              <option value="Alexandria">Alexandria</option>
-              <option value="AlMahallah">AlMahallah</option>
-              <option value="Aswan">Aswan</option>
-              <option value="Luxor">Luxor</option>
-            </select>
-        </div>
-          <div class="form-group">
-            <select class="form-control" name="patientsStatus" id="patientsStatus" title="Enter Your Patients' Status" required>
-              <option value="" selected disabled hidden>Patients' Status</option>
-              <option value="Immediate">Immediate</option>
-              <option value="Urgent">Urgent</option>
-              <option value="Normal">Normal</option>
-            </select>
-            
-          </div>  
-          <div class="form-group">
-            <input type="number" placeholder="Blood Quantity" class="form-control" min='1'  name="bloodQuantity" title="Enter Your Blood Quantity" required >
-        </div>
-      <br><br><br>
-        <button type="submit" style="padding: 10px 145px;border-radius: 12px;" class="btn btn-primary">Register</button>
-      </form>   
-      {% if context != "" %}
-        <div class="alert alert-success">
-          <h3> {{context|linebreaks }} </h3>
-        </div>
-      {% endif %}
-      <!-- {{form}} -->
-</body>
+    <div class="form-group">
+      <select name="city" class="form-control" id="city" title="Enter Your city" required>
+        <option value="" selected disabled hidden>Choose Your city</option>
+        <option value="Cairo">Cairo</option>
+        <option value="mansoura">mansoura</option>
+        <option value="Alexandria">Alexandria</option>
+        <option value="AlMahallah">AlMahallah</option>
+        <option value="Aswan">Aswan</option>
+        <option value="Luxor">Luxor</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <select class="form-control" name="patientsStatus" id="patientsStatus" title="Enter Your Patients' Status"
+        required>
+        <option value="" selected disabled hidden>Patients' Status</option>
+        <option value="Immediate">Immediate</option>
+        <option value="Urgent">Urgent</option>
+        <option value="Normal">Normal</option>
+      </select>
+
+    </div>
+    <div class="form-group">
+      <input type="number" placeholder="Blood Quantity" class="form-control" min='1' name="bloodQuantity"
+        title="Enter Your Blood Quantity" required>
+    </div>
+    <br><br>
+    
+    <button type="submit" style="padding: 10px 145px;border-radius: 12px;" class="btn btn-primary">Register</button>
+  </form>
+  <br>
+  <div class="form-group" style=" text-align: center">
+    {% if len_data != 0 %}
+    <table class="table" id='donors'>
+      <thead>
+        <tr>
+          {% for k in header %}
+          <th>{{k}}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for k in arr_donors %}
+        <tr>
+          <td>{{k.name}}</td>
+          <td>{{k.city}}</td>
+          <td>{{k.bloodtype}}</td>
+          <td>{{k.created_at}}</td>
+          <td>{{k.BloodExpirationDate}}</td>
+          <td>{{k.available}}</td>
+        </tr>
+        {% endfor %}
+
+      </tbody>
+
+    </table>
+    {% endif  %}
+    
+    {% if len_error != 0 %}
+    <h1 style="text-align: center;"> sorry , No one have this blood type </h1>
+
+    {% endif  %}
+
+  </div>
+  <!-- {{form}} -->
+  {% endblock start %}
+</div>
+<style>
+  #donors {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 95%;
+    margin: auto;
+  }
+
+  #donors td,
+  #donors th {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  #donors tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  #donors tr:hover {
+    background-color: #ddd;
+  }
+
+  #donors th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: center;
+    background-color: #4CAF50;
+    color: white;
+  }
+</style>
+<script>
+
+$('.btn').on('click', function() {
+    var $this = $(this);
+  $this.button('loading');
+    setTimeout(function() {
+       $this.button('reset');
+   }, 8000);
+});
+
+</script>
+
 </html>
